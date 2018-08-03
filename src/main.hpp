@@ -40,14 +40,14 @@
 
 using namespace std;
 
-inline bool obs(const double x) { return not isnan(x); }
+inline bool obs(const double x) { return !isnan(x); }
 
 
 template<typename Target,typename Source> Target to(Source arg)
 {
     stringstream interpreter;
     Target result;
-    if (not(interpreter<<arg) or not(interpreter>>result) or not(interpreter>>ws).eof()) {
+    if (!(interpreter<<arg) || !(interpreter>>result) || !(interpreter>>ws).eof()) {
         throw runtime_error("format error");
     }
     return result;

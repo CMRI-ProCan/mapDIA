@@ -32,7 +32,7 @@ class Est
     vector<vector<vector<double> > > d_logp;
     vector<vector<int> > d_Z;
     vector<double> d_Phi,d_lo;//log_odds
-    map<double,fdrs,greater<double> > d_fdr;
+    map<double,fdrs> d_fdr;
 
     int ICM();
     void setFdr();
@@ -50,5 +50,5 @@ class Est
     const vector<double>& Phi() const { return d_Phi; }
     const vector<double>& lo() const { return d_lo; }
     const vector<int>& pbool() const { return d_pbool; }
-    const map<double,fdrs,greater<double> >& fdr() const { return d_fdr; }
+    const map<double,fdrs>& fdr() const { return d_fdr; }
 };

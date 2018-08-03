@@ -39,7 +39,7 @@ bool read_param(ifstream& ifs,string& lstr,string& rstr,const map<string,string>
                 istringstream iss(rstr);
                 int n=0;
                 for (char j;iss>>j;n++);
-                for (int i=1;i<n and getline(ifs,str0);i++,rstr+='\n'+str0);
+                for (int i=1;i<n && getline(ifs,str0);i++,rstr+='\n'+str0);
             } else {
                 rstr=str0.substr(e+1);
             }
@@ -53,7 +53,7 @@ bool read_param(ifstream& ifs,string& lstr,string& rstr,const map<string,string>
 Option set_param(const string& filepath,Module& mo,Module& mo1)
 {
     ifstream input_ifs(filepath.c_str());
-    if (not input_ifs) throw runtime_error("can't open "+filepath);
+    if (!input_ifs) throw runtime_error("can't open "+filepath);
 
     map<string,string> opm;
     opm["FILE"]; opm["LEVEL"]; opm["EXPERIMENTAL_DESIGN"];

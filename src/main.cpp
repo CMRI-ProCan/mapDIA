@@ -35,7 +35,7 @@ void print_analysis(const Pre& pr,const Est& es,const Est& es_);
 
 int main(int argc, char** argv)
 {
-    if (argc==1 or string(argv[ 1 ])=="--help") {
+    if (argc==1 || string(argv[ 1 ])=="--help") {
         cout<<"Usage: "+string(argv[ 0 ])+" [INPUT PARAMETER FILE]\n";
         return 0;
     }
@@ -65,7 +65,7 @@ int main(int argc, char** argv)
 
             vector<int> pbool(po.yy().size());
             for (unsigned p=0;p<po.yy().size();p++) {
-                if (mo.adj().at(p).size()>0 or (mo1.modulebool() and mo1.adj().at(p).size()>0)) {
+                if (mo.adj().at(p).size()>0 || (mo1.modulebool() && mo1.adj().at(p).size()>0)) {
                     pbool.at(p)=1;
                 }
             }

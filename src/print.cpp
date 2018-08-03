@@ -24,13 +24,14 @@
 #include"Pre.hpp"
 #include"Post.hpp"
 #include"Est.hpp"
+#include <functional>
 
 
 void print_data(const Pre& pr)
 {
     {
         ofstream ofs("log2_data.txt");
-        if (not ofs) throw runtime_error("can't open log2_data.txt");
+        if (!ofs) throw runtime_error("can't open log2_data.txt");
         ofs<<"Protein";
         if (pr.op().level()>=2) {
             ofs<<"\tPeptide";
@@ -55,7 +56,7 @@ void print_data(const Pre& pr)
 
     if (pr.op().level()==3) {
         ofstream ofs("fragments_for_protein_quantification.txt");
-        if (not ofs) throw runtime_error("can't open fragments_for_protein_quantification.txt");
+        if (!ofs) throw runtime_error("can't open fragments_for_protein_quantification.txt");
         ofs<<"Protein";
         if (pr.op().level()>=2) {
             ofs<<"\tPeptide";
@@ -85,7 +86,7 @@ void print_data(const Pre& pr)
 
     if (pr.op().level()==3) {
         ofstream ofs("peptide_level.txt");
-        if (not ofs) throw runtime_error("can't open peptide_level.txt");
+        if (!ofs) throw runtime_error("can't open peptide_level.txt");
         ofs<<"Protein\tPeptide";
         for (int j=0; j<pr.op().ncolumns(); j++) ofs<<'\t'<<pr.pheader().at(j);
         ofs<<"\tnFragment";
@@ -106,7 +107,7 @@ void print_data(const Pre& pr)
 
     if (pr.op().level()>=2) {
         ofstream ofs("protein_level.txt");
-        if (not ofs) throw runtime_error("can't open protein_level.txt");
+        if (!ofs) throw runtime_error("can't open protein_level.txt");
         ofs<<"Protein";
         for (int j=0; j<pr.op().ncolumns(); j++) ofs<<'\t'<<pr.pheader().at(j);
         if (pr.op().level()==3) ofs<<"\tnFragment";
@@ -120,7 +121,7 @@ void print_data(const Pre& pr)
             }
             multimap<double,int>::const_iterator it=qm_cor.begin();
             vector<int> qindex;
-            for (unsigned q=0;static_cast<int>(q)<pr.op().top_q() and q<pr.yy().at(p).size();q++,it++) {
+            for (unsigned q=0;static_cast<int>(q)<pr.op().top_q() && q<pr.yy().at(p).size();q++,it++) {
                 qindex.push_back(it->second);
             }
             vector<double> psum(pr.op().ncolumns());
@@ -149,7 +150,7 @@ void print_data(const Pre& pr)
 void print_selection(const Pre& pr)
 {
     ofstream ofs("fragment_selection.txt");
-    if (not ofs) throw runtime_error("can't open fragment_selection.txt");
+    if (!ofs) throw runtime_error("can't open fragment_selection.txt");
     ofs<<"Protein";
     if (pr.op().level()>=2) {
         ofs<<"\tPeptide";
@@ -193,7 +194,7 @@ void print_analysis(const Pre& pr,const Est& es,const Est& es_)
     const Post& po(es.po());
 
     ofstream ofs("analysis_output.txt");
-    if (not ofs) throw runtime_error("can't open analysis_output.txt");
+    if (!ofs) throw runtime_error("can't open analysis_output.txt");
     ofs<<"Protein";
     if (op.level()>=2) {
         ofs<<"\tnPeptide";
@@ -248,7 +249,7 @@ void print_analysis(const Pre& pr,const Est& es,const Est& es_)
     ofs<<'\n';
 
     ofstream ofs_("analysis_output_wide_format.txt");
-    if (not ofs_) throw runtime_error("can't open analysis_output_wide_format.txt");
+    if (!ofs_) throw runtime_error("can't open analysis_output_wide_format.txt");
     ofs_<<"Comparison";
     for (int c=0;c<op.nc();c++) {
         const int t1=op.ct1().at(c),t2=op.ct2().at(c);

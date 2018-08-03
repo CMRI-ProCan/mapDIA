@@ -21,6 +21,7 @@
 #include"main.hpp"
 #include"Option.hpp"
 #include"Pre.hpp"
+#include <functional>
 
 
 typedef multimap<string,Row*>::const_iterator mmit;
@@ -46,7 +47,7 @@ class pred_shared_q
     const set<string> d_inc;
     public:
     pred_shared_q(const set<string>& inc) : d_inc(inc) { }
-    bool operator() (const Row& tmprow) const { return tmprow.pcount>1 and d_inc.find(tmprow.pid)==d_inc.end(); }
+    bool operator() (const Row& tmprow) const { return tmprow.pcount>1 && d_inc.find(tmprow.pid)==d_inc.end(); }
 };
 
 
@@ -60,7 +61,7 @@ class pred_freq
     bool operator() (const Row& tmprow) const {
         int count=0;
         for (int t=0;t<d_nt;t++) if (tmprow.nobs.at(t)>=d_freq_cut.at(t)) count++;
-        return count<2 and d_inc.find(tmprow.pid)==d_inc.end();
+        return count<2 && d_inc.find(tmprow.pid)==d_inc.end();
     }
 };
 
@@ -71,7 +72,7 @@ class pred_mc
     const set<string> d_inc;
     public:
     pred_mc(const double mc_cut,const double cv_cut,const set<string>& inc) : d_mc_cut(mc_cut),d_cv_cut(cv_cut),d_inc(inc) { }
-    bool operator() (const Row& tmprow) const { return tmprow.pseudoCV>=d_cv_cut and tmprow.m_cor<d_mc_cut and d_inc.find(tmprow.pid)==d_inc.end(); }
+    bool operator() (const Row& tmprow) const { return tmprow.pseudoCV>=d_cv_cut && tmprow.m_cor<d_mc_cut && d_inc.find(tmprow.pid)==d_inc.end(); }
     //bool operator() (const Row& tmprow) const { return tmprow.m_cor<d_mc_cut and d_inc.find(tmprow.pid)==d_inc.end(); }
 };
 
@@ -82,7 +83,7 @@ class pred_fmin
     const set<string> d_inc;
     public:
     pred_fmin(const int min_f,const set<string>& inc) : d_min_f(min_f),d_inc(inc) { }
-    bool operator() (const Row& tmprow) const { return tmprow.fcount<d_min_f and d_inc.find(tmprow.pid)==d_inc.end(); }
+    bool operator() (const Row& tmprow) const { return tmprow.fcount<d_min_f && d_inc.find(tmprow.pid)==d_inc.end(); }
 };
 
 
@@ -92,7 +93,7 @@ class pred_fmax
     const set<string> d_inc;
     public:
     pred_fmax(const int max_f,const set<string>& inc) : d_max_f(max_f),d_inc(inc) { }
-    bool operator() (const Row& tmprow) const { return tmprow.mcrank>d_max_f and d_inc.find(tmprow.pid)==d_inc.end(); }
+    bool operator() (const Row& tmprow) const { return tmprow.mcrank>d_max_f && d_inc.find(tmprow.pid)==d_inc.end(); }
 };
 
 
@@ -102,7 +103,7 @@ class pred_qcount
     const set<string> d_inc;
     public:
     pred_qcount(const int q_cut,const set<string>& inc) : d_q_cut(q_cut),d_inc(inc) { }
-    bool operator() (const Row& tmprow) const { return tmprow.qcount<d_q_cut and d_inc.find(tmprow.pid)==d_inc.end(); }
+    bool operator() (const Row& tmprow) const { return tmprow.qcount<d_q_cut && d_inc.find(tmprow.pid)==d_inc.end(); }
 };
 
 
@@ -186,7 +187,7 @@ void Pre::setOutlier()
                 const double tmplb = mtrace.at(l) - op().SDF()*sqrt(var);
                 for (mmit it=itp;it!=end1;it++) {
                     double& ref = it->second->in.at(l);
-                    if (obs(ref) and (ref>tmpub or ref<tmplb)) {
+                    if (obs(ref) && (ref>tmpub || ref<tmplb)) {
                         ref=NAN;
                         it->second->outlier=true;
                     }
@@ -245,7 +246,7 @@ void Pre::setMc()
                 vector<double> center(2);
                 vector<double> sd(center.size());
                 int ncol0=0;
-                for (int l=0;l<op().ncolumns();l++) if (obs(ww.at(f).at(l)) and obs(ww.at(g).at(l))) {
+                for (int l=0;l<op().ncolumns();l++) if (obs(ww.at(f).at(l)) && obs(ww.at(g).at(l))) {
                     center.at(0) += ww.at(f).at(l);
                     center.at(1) += ww.at(g).at(l);
                     ncol0++;
@@ -253,17 +254,17 @@ void Pre::setMc()
                 if (ncol0<2) continue;
                 center.at(0) /= ncol0;
                 center.at(1) /= ncol0;
-                for (int l=0;l<op().ncolumns();l++) if (obs(ww.at(f).at(l)) and obs(ww.at(g).at(l))) {
+                for (int l=0;l<op().ncolumns();l++) if (obs(ww.at(f).at(l)) && obs(ww.at(g).at(l))) {
                     sd.at(0) += pow(ww.at(f).at(l)-center.at(0),2);
                     sd.at(1) += pow(ww.at(g).at(l)-center.at(1),2);
                 }
                 sd.at(0) = sqrt(sd.at(0));
                 sd.at(1) = sqrt(sd.at(1));
                 double cortmp=0;
-                for (int l=0;l<op().ncolumns();l++) if (obs(ww.at(f).at(l)) and obs(ww.at(g).at(l))) {
+                for (int l=0;l<op().ncolumns();l++) if (obs(ww.at(f).at(l)) && obs(ww.at(g).at(l))) {
                     cortmp += (ww.at(f).at(l)-center.at(0))*(ww.at(g).at(l)-center.at(1));
                 }
-                if (sd.at(0)==0 or sd.at(1)==0) continue;
+                if (sd.at(0)==0 || sd.at(1)==0) continue;
                 cortmp /= sd.at(0);
                 cortmp /= sd.at(1);
                 cor.push_back(cortmp);
@@ -420,26 +421,26 @@ void Pre::read()
 {
     string str0;
     ifstream prot_ifs(op().file().c_str());
-    if (not prot_ifs) throw runtime_error("can't open "+op().file());
+    if (!prot_ifs) throw runtime_error("can't open "+op().file());
     getline(prot_ifs,str0);
     istringstream iss(str0);
     getline(iss,str0,'\t');
     if (op().level()>=2) getline(iss,str0,'\t');
     if (op().level()==3) getline(iss,str0,'\t');
     for (int j=0; j<op().ncolumns(); j++) {
-        if (not getline(iss,str0,'\t')) throw runtime_error("unequal columns");
+        if (!getline(iss,str0,'\t')) throw runtime_error("unequal columns");
         d_pheader.push_back(str0);
     }
     int mRT=0;
-    for (int i=2;getline(prot_ifs,str0) and (not str0.empty());i++) {
+    for (int i=2;getline(prot_ifs,str0) && (!str0.empty());i++) {
         Row tmp_f(op().ncolumns(),op().min_obs(),op().min_CV(),op().min_correl(),op().min_f(),op().min_q());
         iss.clear(); iss.str(str0+"\t");
         getline(iss,tmp_f.pid,'\t');
         if (op().level()==2) { tmp_f.qid=tmp_f.pid; getline(iss,tmp_f.fid,'\t'); }
         if (op().level()==3) { getline(iss,tmp_f.qid,'\t'); getline(iss,tmp_f.fid,'\t'); }
         for (int j=0;j<op().ncolumns();j++) {
-            if (not getline(iss,str0,'\t')) throw runtime_error("unequal columns: row "+to<string>(i));
-            if (str0=="NA" or str0=="0" or str0.empty()) {
+            if (!getline(iss,str0,'\t')) throw runtime_error("unequal columns: row "+to<string>(i));
+            if (str0=="NA" || str0=="0" || str0.empty()) {
                 tmp_f.in.at(j)=NAN;
             } else {
                 try {
@@ -450,9 +451,9 @@ void Pre::read()
                 }
             }
         }
-        if (rtplot or op().normalization()=="RT") {
-            if (not getline(iss,str0,'\t')) throw runtime_error("RT time: row "+to<string>(i));
-            if (str0=="NA" or str0.empty()) {
+        if (rtplot || op().normalization()=="RT") {
+            if (!getline(iss,str0,'\t')) throw runtime_error("RT time: row "+to<string>(i));
+            if (str0=="NA" || str0.empty()) {
                 mRT++; 
             } else {
                 try {
@@ -505,7 +506,7 @@ void Pre::filter()
     for (list<Row>::iterator it=d_pdata.begin();it!=d_pdata.end();it++) {
         pid_mm_.insert(make_pair(it->pid,&(*it)));
     }
-    if (op().level()>=2 and op().shared_q()) {
+    if (op().level()>=2 && op().shared_q()) {
         setShared_q();
         for (list<Row>::const_iterator it=pdata().begin();it!=pdata().end();it++) {
             d_pqfid_m0[it->pid+'\t'+it->qid+'\t'+it->fid]->pcount = it->pcount;
@@ -568,12 +569,12 @@ void Pre::filter()
                 Row* it=it1->second;
                 double min_in=DBL_MAX;
                 for (int l=0;l<op().ncolumns();l++) {
-                    if (obs(it->in.at(l)) and it->in_.at(l)<min_in) min_in=it->in_.at(l);
+                    if (obs(it->in.at(l)) && it->in_.at(l)<min_in) min_in=it->in_.at(l);
                 }
                 it->im.assign(op().ncolumns(),0);
                 if (min_in<DBL_MAX) {
                     for (int l=0;l<op().ncolumns();l++) {
-                        if (not obs(it->in.at(l))) {
+                        if (!obs(it->in.at(l))) {
                             it->in_.at(l)=min_in*.5;//op().impute_scale();
                             it->im.at(l)=1;
                         }
@@ -589,12 +590,12 @@ void Pre::filter()
         if (op().impute_type()=="row") for (list<Row>::iterator it=d_pdata.begin();it!=d_pdata.end();it++) {
             double min_in=DBL_MAX;
             for (int l=0;l<op().ncolumns();l++) {
-                if (obs(it->in.at(l)) and it->in_.at(l)<min_in) min_in=it->in_.at(l);
+                if (obs(it->in.at(l)) && it->in_.at(l)<min_in) min_in=it->in_.at(l);
             }
             it->im.assign(op().ncolumns(),0);
             if (min_in<DBL_MAX) {
                 for (int l=0;l<op().ncolumns();l++) {
-                    if (not obs(it->in.at(l))) {
+                    if (!obs(it->in.at(l))) {
                         it->in_.at(l)=min_in*op().impute_scale();
                         it->im.at(l)=1;
                     }
@@ -607,26 +608,26 @@ void Pre::filter()
             vector<double> colMin(op().ncolumns(),DBL_MAX);
             for (list<Row>::iterator it=d_pdata.begin();it!=d_pdata.end();it++) {
                 for (int l=0;l<op().ncolumns();l++) {
-                    if (obs(it->in.at(l)) and it->in_.at(l)<colMin.at(l)) colMin.at(l)=it->in_.at(l);
+                    if (obs(it->in.at(l)) && it->in_.at(l)<colMin.at(l)) colMin.at(l)=it->in_.at(l);
                 }
             }
             for (list<Row>::iterator it=d_pdata.begin();it!=d_pdata.end();it++) {
                 it->im.assign(op().ncolumns(),0);
                 for (int t=0;t<op().nt();t++) {
                     double min_in=DBL_MAX;
-                    for (int s=0;s<op().ssize().at(t);s++) if (obs(it->in.at(op().np().at(t)+s)) and it->in_.at(op().np().at(t)+s)<min_in) {
+                    for (int s=0;s<op().ssize().at(t);s++) if (obs(it->in.at(op().np().at(t)+s)) && it->in_.at(op().np().at(t)+s)<min_in) {
                         min_in=it->in_.at(op().np().at(t)+s);
                     }
                     if (min_in<DBL_MAX) {
                         for (int s=0;s<op().ssize().at(t);s++) {
-                            if (not obs(it->in.at(op().np().at(t)+s))) {
+                            if (!obs(it->in.at(op().np().at(t)+s))) {
                                 it->in_.at(op().np().at(t)+s)=min_in*op().impute_scale();
                                 it->im.at(op().np().at(t)+s)=1;
                             }
                         }
                     } else {
                         for (int s=0;s<op().ssize().at(t);s++) {
-                            if (not obs(it->in.at(op().np().at(t)+s))) {
+                            if (!obs(it->in.at(op().np().at(t)+s))) {
                                 it->in_.at(op().np().at(t)+s)=colMin.at(op().np().at(t)+s)*op().impute_scale();
                                 it->im.at(op().np().at(t)+s)=1;
                             }
@@ -734,7 +735,7 @@ void Pre::dup()
     if (duprow.size()>0) {
         cout<<"duplicate row names: \"duplicates.txt\"\n";
         ofstream ofs("duplicates.txt");
-        if (not ofs) throw runtime_error("can't open duplicates.txt");
+        if (!ofs) throw runtime_error("can't open duplicates.txt");
         copy(duprow.begin(),duprow.end(),ostream_iterator<string>(ofs,"\n"));
     }
 }

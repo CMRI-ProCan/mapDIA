@@ -22,6 +22,7 @@
 #include"Option.hpp"
 #include"Pre.hpp"
 #include"Post.hpp"
+#include <functional>
 
 
 double quantile(const vector<double>& data,const double f)
@@ -45,7 +46,7 @@ double quantile(const vector<double>& data,const double f)
 void Post::tmp_remove(const int t1,const int t2)
 {
     for (unsigned p=0;p<yy().size();p++) for (unsigned q=0;q<yy().at(p).size();q++) for (unsigned f=0;f<yy().at(p).at(q).size();f++) {
-        if (d_yobs.at(p).at(q).at(f).at(t1)<op().min_obs().at(t1) or d_yobs.at(p).at(q).at(f).at(t2)<op().min_obs().at(t2)) {
+        if (d_yobs.at(p).at(q).at(f).at(t1)<op().min_obs().at(t1) || d_yobs.at(p).at(q).at(f).at(t2)<op().min_obs().at(t2)) {
             for (int s=0;s<op().ssize().at(t1);s++) d_zz.at(p).at(q).at(f).at(op().np().at(t1)+s)=NAN;
             for (int s=0;s<op().ssize().at(t2);s++) d_zz.at(p).at(q).at(f).at(op().np().at(t2)+s)=NAN;
         }
@@ -119,7 +120,7 @@ void Post::sigE_c(const int t1,const int t2,double& aE,double& bE)
                 nobs++;
             }
         }
-        if (nobs-1>0 and sigEpq>0) sigE.push_back(sigEpq/(nobs-1));
+        if (nobs-1>0 && sigEpq>0) sigE.push_back(sigEpq/(nobs-1));
     }
     const double mom1 = accumulate(sigE.begin(),sigE.end(),0.)/sigE.size();
     double mom2 = 0;
@@ -156,16 +157,16 @@ void Post::logf_c(const int t1,const int t2,const int c,const double aE,const do
                 int n1=0,n2=0;
                 for (unsigned f=0;f<yy().at(p).at(q).size();f++) {
                     const vector<double>& ref=zz().at(p).at(q).at(f);
-                    for (int s=0;s<op().ssize().at(t1);s++) if (obs(ref.at(op().np().at(t1)+s)) and (im().at(p).at(q).at(f).empty() or im().at(p).at(q).at(f).at(op().np().at(t1)+s)==0)) {
+                    for (int s=0;s<op().ssize().at(t1);s++) if (obs(ref.at(op().np().at(t1)+s)) && (im().at(p).at(q).at(f).empty() || im().at(p).at(q).at(f).at(op().np().at(t1)+s)==0)) {
                         n1++;
                         sumsqD1 += pow(ref.at(op().np().at(t1)+s),2);
                     }
-                    for (int s=0;s<op().ssize().at(t2);s++) if (obs(ref.at(op().np().at(t2)+s)) and (im().at(p).at(q).at(f).empty() or im().at(p).at(q).at(f).at(op().np().at(t2)+s)==0)) {
+                    for (int s=0;s<op().ssize().at(t2);s++) if (obs(ref.at(op().np().at(t2)+s)) && (im().at(p).at(q).at(f).empty() || im().at(p).at(q).at(f).at(op().np().at(t2)+s)==0)) {
                         n2++;
                         sumsqD2 += pow(ref.at(op().np().at(t2)+s),2);
                     }
                 }
-                if (nf().at(c).at(p).at(q)<op().min_f() or n1<2 or n2<2) continue;
+                if (nf().at(c).at(p).at(q)<op().min_f() || n1<2 || n2<2) continue;
                 if (sumsqD1+sumsqD2!=0) sumsqs.push_back(sumsqD1+sumsqD2);
             }
         }
@@ -189,11 +190,11 @@ void Post::logf_c(const int t1,const int t2,const int c,const double aE,const do
                 }
             }
             if (nf().at(c).at(p).at(q)<op().min_f()) continue;
-            if (n1<2 or n2<2) { d_nf.at(c).at(p).at(q)=0; continue; }
+            if (n1<2 || n2<2) { d_nf.at(c).at(p).at(q)=0; continue; }
             d_logf0.at(c).at(p) += mlike(n1+n2,sumsqD1+sumsqD2,0,aE,bE,ff);
             d_logf1.at(c).at(p) += mlike(n1,sumsqD1,sumD1,n2,sumsqD2,-sumD1,aE,bE,ff);
         }
-        if (logf0().at(c).at(p)==0 and logf1().at(c).at(p)==0) d_pq.at(c).at(p)=0;
+        if (logf0().at(c).at(p)==0 && logf1().at(c).at(p)==0) d_pq.at(c).at(p)=0;
     }
 }
 
@@ -204,7 +205,7 @@ void Post::tmp_remove_pair(const int t1,const int t2)
         int npair=0;
         vector<double>& ref=d_zz.at(p).at(q).at(f);
         for (int s=0;s<op().ssize().at(0);s++) {
-            if (obs(ref.at(op().np().at(t1)+s)) and obs(ref.at(op().np().at(t2)+s))) {
+            if (obs(ref.at(op().np().at(t1)+s)) && obs(ref.at(op().np().at(t2)+s))) {
                 npair++;
             } else if (obs(ref.at(op().np().at(t1)+s)) != obs(ref.at(op().np().at(t2)+s))) {
                 ref.at(op().np().at(t1)+s)=NAN;
@@ -257,7 +258,7 @@ void Post::log2fc_c(const int t1,const int t2,const int c)
                     }
                 }
             }
-            d_log2fc.at(c).at(p)=(nobs1>0 and nobs2>0 ? log2_1/nobs1-log2_2/nobs2 : 0);
+            d_log2fc.at(c).at(p)=(nobs1>0 && nobs2>0 ? log2_1/nobs1-log2_2/nobs2 : 0);
             double s1=0,s2=0;
             for (unsigned q=0;q<zz().at(p).size();q++) for (unsigned f=0;f<zz().at(p).at(q).size();f++) {
                 const vector<double>& ref=zz().at(p).at(q).at(f);

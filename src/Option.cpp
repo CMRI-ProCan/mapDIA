@@ -30,7 +30,7 @@ Option::Option(const map<string,string>& opm) :
 {
     istringstream iss(d_opm.find("FILE")->second);
     iss>>d_file;
-    if (not ifstream(file().c_str())) throw runtime_error("FILE not found");
+    if (!ifstream(file().c_str())) throw runtime_error("FILE not found");
 
     int int0;
     double double0;
@@ -38,20 +38,20 @@ Option::Option(const map<string,string>& opm) :
     iss.clear(); iss.str(d_opm.find("LEVEL")->second);
     if (iss>>int0) {
         d_level=int0;
-        if (level()<1 or level()>3) throw runtime_error("LEVEL?");
+        if (level()<1 || level()>3) throw runtime_error("LEVEL?");
     }
 
     iss.clear(); iss.str(d_opm.find("FUDGE")->second);
     if (iss>>double0) {
         d_fudge=double0;
-        if (fudge()<0 or fudge()>1) throw runtime_error("FUDGE?");
+        if (fudge()<0 || fudge()>1) throw runtime_error("FUDGE?");
     }
 
     iss.clear(); iss.str(d_opm.find("IMPUTE")->second);
     if (iss>>str0>>double0) {
         transform(str0.begin(),str0.end(),str0.begin(),::tolower);
         d_impute_type=str0;
-        if (impute_type()!="row" and impute_type()!="group") throw runtime_error("IMPUTE?");
+        if (impute_type()!="row" && impute_type()!="group") throw runtime_error("IMPUTE?");
         d_impute_scale=double0;
         if (impute_scale()<=0) throw runtime_error("IMPUTE?");
     }
@@ -59,7 +59,7 @@ Option::Option(const map<string,string>& opm) :
     iss.clear(); iss.str(d_opm.find("EXPERIMENTAL_DESIGN")->second);
     iss>>str0;
     transform(str0.begin(),str0.end(),str0.begin(),::tolower);
-    if (str0!="independentdesign" and str0!="replicatedesign") {
+    if (str0!="independentdesign" && str0!="replicatedesign") {
         throw runtime_error("EXPERIMENTAL_DESIGN?");
     }
     d_rep=(str0=="replicatedesign");
@@ -67,14 +67,14 @@ Option::Option(const map<string,string>& opm) :
     iss.clear(); iss.str(d_opm.find("LOG2_TRANSFORMATION")->second);
     if (iss>>str0) {
         transform(str0.begin(),str0.end(),str0.begin(),::tolower);
-        if (str0!="true" and str0!="false") throw runtime_error("LOG2_TRANSFORMATION");
+        if (str0!="true" && str0!="false") throw runtime_error("LOG2_TRANSFORMATION");
         d_log2=(str0=="true");
     }
 
     iss.clear(); iss.str(d_opm.find("REMOVE_SHARED_PEPTIDE")->second);
     if (iss>>str0) {
         transform(str0.begin(),str0.end(),str0.begin(),::tolower);
-        if (str0!="true" and str0!="false") throw runtime_error("REMOVE_SHARED_PEPTIDE");
+        if (str0!="true" && str0!="false") throw runtime_error("REMOVE_SHARED_PEPTIDE");
         d_shared_q=(str0=="true");
     }
 
@@ -82,7 +82,7 @@ Option::Option(const map<string,string>& opm) :
     iss>>d_normalization;
     transform(normalization().begin(),normalization().end(),d_normalization.begin(),::toupper);
     if (normalization()=="RT") {
-        if (not (iss>>d_window) or window()<=0) throw runtime_error("RT window?");
+        if (!(iss>>d_window) || window()<=0) throw runtime_error("RT window?");
         if (iss>>int0) d_dp=int0;
     }
 
@@ -96,14 +96,14 @@ Option::Option(const map<string,string>& opm) :
         iss.clear(); iss.str(d_opm.find("PSEUDOCV")->second);
         if (iss>>double0) {
             d_min_CV=double0;
-            if (min_CV()<0 or min_CV()>1) throw runtime_error("PSEUDOCV?");
+            if (min_CV()<0 || min_CV()>1) throw runtime_error("PSEUDOCV?");
         }
 
         iss.clear(); iss.str(d_opm.find("MIN_CORREL")->second);
-        if (not (iss>>d_min_correl) or (min_correl()<-1 or min_correl()>1)) throw runtime_error("MIN_CORREL?");
+        if (!(iss>>d_min_correl) || (min_correl()<-1 || min_correl()>1)) throw runtime_error("MIN_CORREL?");
         if (level()==2) {
             iss.clear(); iss.str(d_opm.find("MIN_PEP_PER_PROT")->second);
-            if (not (iss>>d_min_f) or min_f()<1) throw runtime_error("MIN_PEP_PER_PROT?");
+            if (!(iss>>d_min_f) || min_f()<1) throw runtime_error("MIN_PEP_PER_PROT?");
             iss.clear(); iss.str(d_opm.find("MAX_PEP_PER_PROT")->second);
             if (iss>>int0) {
                 d_max_f=int0;
@@ -112,14 +112,14 @@ Option::Option(const map<string,string>& opm) :
             }
         } else {
             iss.clear(); iss.str(d_opm.find("MIN_FRAG_PER_PEP")->second);
-            if (not (iss>>d_min_f) or min_f()<1) throw runtime_error("MIN_FRAG_PER_PEP?");
+            if (!(iss>>d_min_f) || min_f()<1) throw runtime_error("MIN_FRAG_PER_PEP?");
             iss.clear(); iss.str(d_opm.find("MAX_FRAG_PER_PEP")->second);
             if (iss>>int0) {
                 d_max_f=int0;
                 if (max_f()<min_f()) throw runtime_error("MAX_FRAG_PER_PEP < MIN_FRAG_PER_PEP");
             }
             iss.clear(); iss.str(d_opm.find("MIN_PEP_PER_PROT")->second);
-            if (not (iss>>d_min_q) or min_q()<1) throw runtime_error("MIN_PEP_PER_PROT?");
+            if (!(iss>>d_min_q) || min_q()<1) throw runtime_error("MIN_PEP_PER_PROT?");
             iss.clear(); iss.str(d_opm.find("MAX_PEP_PER_PROT")->second);
             if (iss>>int0) {
                 d_top_q=int0;
@@ -133,10 +133,10 @@ Option::Option(const map<string,string>& opm) :
 
     if (rep()) {
         iss.clear(); iss.str(d_opm.find("MIN_OBS")->second);
-        if (not (iss>>int0)) throw runtime_error("MIN_OBS?");
+        if (!(iss>>int0)) throw runtime_error("MIN_OBS?");
         d_min_obs.assign(labels().size(),int0);
         iss.clear(); iss.str(d_opm.find("SIZE")->second);
-        if (not (iss>>int0)) throw runtime_error("SIZE?");
+        if (!(iss>>int0)) throw runtime_error("SIZE?");
         d_ssize.assign(labels().size(),int0);
     } else {
         iss.clear(); iss.str(d_opm.find("MIN_OBS")->second);
@@ -152,9 +152,9 @@ Option::Option(const map<string,string>& opm) :
     }
 
     iss.clear(); iss.str(d_opm.find("MIN_DE")->second);
-    if (not (iss>>d_minDE) or minDE()<0) throw runtime_error("MIN_DE?");
+    if (!(iss>>d_minDE) || minDE()<0) throw runtime_error("MIN_DE?");
     iss.clear(); iss.str(d_opm.find("MAX_DE")->second);
-    if (not (iss>>d_maxDE) or maxDE()<minDE() or maxDE()>1) throw runtime_error("MAX_DE?");
+    if (!(iss>>d_maxDE) || maxDE()<minDE() || maxDE()>1) throw runtime_error("MAX_DE?");
 
 
     iss.clear(); iss.str(d_opm.find("INCLUSION_LIST")->second);
@@ -163,7 +163,7 @@ Option::Option(const map<string,string>& opm) :
     istringstream iss0(d_opm.find("CONTRAST")->second);
     vector<vector<char> > cindex(nt(),vector<char>(nt()));
     for (int i=0;i<nt();i++) {
-        if (not getline(iss0,str0)) throw runtime_error("CONTRAST?");
+        if (!getline(iss0,str0)) throw runtime_error("CONTRAST?");
         iss.clear(); iss.str(str0);
         for (int j=0;j<nt();j++) {
             char c;
@@ -171,7 +171,7 @@ Option::Option(const map<string,string>& opm) :
         }
     }
     for (int i=0;i<nt();i++) for (int j=0;j<i;j++) {
-        if (cindex.at(i).at(j)=='1' and cindex.at(j).at(i)=='1') {
+        if (cindex.at(i).at(j)=='1' && cindex.at(j).at(i)=='1') {
             throw runtime_error("CONTRAST("+to<string>(i+1)+","+to<string>(j+1)+") = CONTRAST("+to<string>(j+1)+","+to<string>(i+1)+") = 1");
         }
     }

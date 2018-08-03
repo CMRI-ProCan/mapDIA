@@ -29,7 +29,7 @@
 double logcond_fn(const int p,const vector<double>& Phi,const vector<int>& Zij,const Module& mo,const Module& mo1)
 {
     double f0=0,f1=0;
-    if (mo.modulebool() and mo.adj().at(p).size()>0) {
+    if (mo.modulebool() && mo.adj().at(p).size()>0) {
         for (set<int>::const_iterator it=mo.adj().at(p).begin();it!=mo.adj().at(p).end();it++) {
             if (mo.mrf()=="0_1") {
                 f0 += Zij.at(*it);
@@ -40,7 +40,7 @@ double logcond_fn(const int p,const vector<double>& Phi,const vector<int>& Zij,c
         f0 /= mo.adj().at(p).size();
         f0 *= Phi.at(1);
     }
-    if (mo1.modulebool() and mo1.adj().at(p).size()>0) {
+    if (mo1.modulebool() && mo1.adj().at(p).size()>0) {
         for (set<int>::const_iterator it=mo1.adj().at(p).begin();it!=mo1.adj().at(p).end();it++) {
             if (mo1.mrf()=="0_1") {
                 f1 += Zij.at(*it);
@@ -67,7 +67,7 @@ class Logpseudol
     double operator()(const vector<double> &d_Phi, vector<double> &grad) const
     {
         double logpseudo=0;
-        for (int c=0;c<d_po.op().nc();c++) for (unsigned p=0;p<d_po.yy().size();p++) if (d_pbool.at(p)==1 and d_po.pq().at(c).at(p)==1) {
+        for (int c=0;c<d_po.op().nc();c++) for (unsigned p=0;p<d_po.yy().size();p++) if (d_pbool.at(p)==1 && d_po.pq().at(c).at(p)==1) {
             logpseudo += logcond_fn(p,d_Phi,d_Z.at(c),d_mo,d_mo1);
         }
         return logpseudo;
@@ -84,7 +84,7 @@ int Est::ICM()
     int sumdiff=0;
     for (int c=0;c<d_po.op().nc();c++) {
         vector<int> Zij(Z().at(c));
-        for (unsigned p=0;p<d_po.yy().size();p++) if (pbool().at(p)==1 and d_po.pq().at(c).at(p)==1) {
+        for (unsigned p=0;p<d_po.yy().size();p++) if (pbool().at(p)==1 && d_po.pq().at(c).at(p)==1) {
             vector<int> Zij1(Z().at(c)),Zij0(Z().at(c));
             Zij1.at(p) = 1;
             Zij0.at(p) = 0;
@@ -92,7 +92,7 @@ int Est::ICM()
             d_logp.at(c).at(p).at(0) = d_po.logf0().at(c).at(p) + logcond_fn(p,Phi(),Zij0,mo(),mo1());
             d_Z.at(c).at(p)=(logp().at(c).at(p).at(1)>logp().at(c).at(p).at(0) ? 1:0);
         }
-        for (unsigned p=0;p<d_po.yy().size();p++) if (pbool().at(p)==1 and d_po.pq().at(c).at(p)==1) sumdiff += (Zij.at(p)!=Z().at(c).at(p));
+        for (unsigned p=0;p<d_po.yy().size();p++) if (pbool().at(p)==1 && d_po.pq().at(c).at(p)==1) sumdiff += (Zij.at(p)!=Z().at(c).at(p));
     }
     return sumdiff;
 }
@@ -101,7 +101,7 @@ int Est::ICM()
 void Est::setFdr()
 {
 
-    for (int c=0;c<d_po.op().nc();c++) for (unsigned p=0;p<d_po.yy().size();p++) if (pbool().at(p)==1 and d_po.pq().at(c).at(p)==1) {
+    for (int c=0;c<d_po.op().nc();c++) for (unsigned p=0;p<d_po.yy().size();p++) if (pbool().at(p)==1 && d_po.pq().at(c).at(p)==1) {
         d_lo.push_back(logp().at(c).at(p).at(1)-logp().at(c).at(p).at(0));
     }
 
@@ -125,8 +125,8 @@ void Est::Construct()
     d_logp.assign(d_po.op().nc(),vector<vector<double> >(d_po.yy().size(),vector<double>(2)));
 
     ofstream ofs("param.txt");
-    if (not ofs) throw runtime_error("can't open param.txt");
-    for (int iter=0,sumdiff=1;iter<100 and sumdiff>0;iter++) {
+    if (!ofs) throw runtime_error("can't open param.txt");
+    for (int iter=0,sumdiff=1;iter<100 && sumdiff>0;iter++) {
         d_Phi.assign(1,0);
         if (mo().modulebool()) {
             d_Phi.push_back(1);
