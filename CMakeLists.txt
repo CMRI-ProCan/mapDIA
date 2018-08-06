@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.1)
 if(NOT WIN32)
 	include(ExternalProject)
 	ExternalProject_Add(
-	  nlopt
+	  nlopt_external
 	  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/nlopt-2.4.2
 	  CONFIGURE_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/nlopt-2.4.2/configure
 	  PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/nlopt-2.4.2
