@@ -11,6 +11,7 @@ if(NOT WIN32)
 	  INSTALL_COMMAND make install
 	  BUILD_IN_SOURCE 1
 	)
+	set(NLOPT_LIBRARIES nlopt)
 else()
 	find_package(nlopt REQUIRED)
 endif()
