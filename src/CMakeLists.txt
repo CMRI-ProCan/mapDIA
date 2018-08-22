@@ -4,5 +4,6 @@ add_executable(mapDIA ${Headers} ${CppFiles})
 target_link_libraries(mapDIA PUBLIC ${NLOPT_LIBRARIES})
 
 if(NOT WIN32)
+	add_dependencies(mapDIA nlopt_external)
 	install(TARGETS mapDIA DESTINATION bin)
 endif()
